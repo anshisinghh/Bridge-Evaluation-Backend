@@ -25,7 +25,7 @@ export class BlockchainReader {
 
     public async getEvents(
         fromBlock: number,
-        toBlock?: number,
+        toBlock: number,
         eventTopics?: string[],
         addresses?: Array<string>
     ): Promise<ethers.Log[]> {
