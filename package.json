@@ -4,19 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-db-migrations": "npx typeorm-ts-node-commonjs migration:create",
+    "run-db-migrations": "npx typeorm-ts-node-commonjs migration:run -d src/data_source.ts",
+    "revert-db-migrations": "npx typeorm-ts-node-commonjs migration:revert -d src/data_source.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.3.2",
+    "@types/node": "^20.4.2",
+    "@types/uuid": "^9.0.2",
+    "knex": "^2.5.1",
     "reflect-metadata": "^0.1.13",
+    "ts-node": "^10.9.1",
+    "typeorm": "^0.3.17",
+    "typeorm-cli": "^1.0.7",
     "typescript": "^5.1.5"
   },
   "dependencies": {
     "ethers": "^6.6.2",
+    "mysql": "^2.18.1",
+    "ts-node": "^10.9.1",
     "pg": "^8.11.1",
-    "typeorm": "^0.3.17"
+    "uuid": "^9.0.0"
   }
 }
