@@ -1,11 +1,13 @@
-import { Blockchain } from "../enums";
+import { Blockchain, BlockchainIndexType } from "../enums";
 import { TransferEventsProcessor } from "./transfer_events_processor";
 import { BlockchainReader } from "../blockchain_reader";
 import { BLOCK_CONFIRMATIONS } from "../constants";
+import { TransactionService } from "../services/message_service";
+import { BlockchainIndexingStatus } from "../data/blockchain_indexing_status";
 
 export class EventListener {
   private blockchainReader: BlockchainReader;
-  private blockchain!: Blockchain;
+  private blockchain: Blockchain;
   private transferEventsProcessor: TransferEventsProcessor;
 
   constructor(blockchain: Blockchain, providerUrl: string, contractAddress: string, destinationAddress: string) {
@@ -36,20 +38,21 @@ export class EventListener {
   }
 
   async ensureLastIndexedBlocks() {
-    // TODO(felix): make this sync with the last indexed block
-    // const hiddenTransactionLastIndexedBlock = await BlockchainIndexingStatus.findOne(
-    //   this.blockchain,
-    //   BlockchainIndexType.HIDDEN_TRANSACTION_SUBMISSION
-    // );
-    // this.transferEventsProcessor.setLastIndexedBlock(
-    //   hiddenTransactionLastIndexedBlock ? hiddenTransactionLastIndexedBlock.blockNumber : undefined
-    // );
+    const hiddenTransactionLastIndexedBlock = await BlockchainIndexingStatus.findOne(
+      this.blockchain,
+      BlockchainIndexType.TRANSFERS
+    );
+    this.transferEventsProcessor.setLastIndexedBlock(
+      hiddenTransactionLastIndexedBlock ? hiddenTransactionLastIndexedBlock.blockNumber : undefined
+    );
   }
 
   async fetchAndProcessEvents(latestBlock: number): Promise<void> {
     try {
       const events = await this.transferEventsProcessor.processEvents(latestBlock);
-      console.log("[EventListener][fetchAndProcessEvents] events", events);
+      if (events === undefined) return;
+      await TransactionService.saveTransactions(events, this.blockchainReader);
+      await BlockchainIndexingStatus.upsert(this.blockchain,BlockchainIndexType.TRANSFERS,latestBlock);
       this.transferEventsProcessor.synchronizeBlockIndexingStatus(latestBlock);
     } catch (err) {
       console.error("[EventListener][fetchAndProcessEvents]", err);

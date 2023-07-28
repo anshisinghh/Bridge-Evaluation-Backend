@@ -1,6 +1,8 @@
 import { BeforeUpdate, BeforeInsert, Column, Entity, Index, PrimaryColumn } from "typeorm";
-import { Blockchain } from "../enums";
+import { Blockchain, POSTGRESQL_ERROR } from "../enums";
 import { uuidWithPrefix } from "../utils";
+import { TransferDetails } from "../types";
+import { AppDataSource } from "../data_source";
 
 /**
  * Store the information about transactions.
@@ -68,5 +70,54 @@ export class Transaction {
     // TODO(felix): validate the address and make sure it actually meets the format
     this.sourceTransactionHash = this.sourceTransactionHash.trim().toLowerCase();
     this.from = this.from?.trim();
+  }
+
+  equal(transferDetails: TransferDetails, blockchain: Blockchain): boolean {
+    return (
+      this.from == transferDetails.from &&
+      this.amount == transferDetails.value  &&
+      this.sourceTransactionHash == transferDetails.transactionHash  &&
+      this.sourceBlockchain == blockchain &&
+      this.sourceBlockchainGas == Number(transferDetails.gasUsed) &&
+      this.sourceBlockchainGasPrice  == Number(transferDetails.gasPrice)
+    )
+  }
+
+  static async create(transferDetails: TransferDetails): Promise<Transaction> {
+    const blockchain = Blockchain.ETHEREUM;
+    const transaction = new Transaction();
+    transaction.from = transferDetails.from
+    transaction. amount = transferDetails.value
+    transaction.sourceTransactionHash = transferDetails.transactionHash
+    transaction.sourceBlockchain = blockchain
+    transaction.sourceBlockchainGas = Number(transferDetails.gasUsed)
+    transaction.sourceBlockchainGasPrice  = Number(transferDetails.gasPrice)
+    // transaction.sourceBlockchainNativeTokenPrice // TODO(felix): get this from coingecko API
+    transaction.initiatedAt = transferDetails.transactionMetaData?.initiatedAt!;
+
+    const insertResult = await AppDataSource.manager
+      .createQueryBuilder()
+      .insert()
+      .into("transaction_information")
+      .values(transaction)
+      .orIgnore()
+      .returning("*")
+      .execute();
+
+    if ((insertResult.raw as Array<Transaction>).length == 0) {
+      const collidingEntry = await AppDataSource.getRepository(Transaction).findOne({
+        where: { sourceBlockchain: blockchain, sourceTransactionHash: transferDetails.transactionHash },
+      });
+      if (collidingEntry?.equal(transferDetails, blockchain)) {
+        return collidingEntry;
+      } else {
+        throw {
+          code: POSTGRESQL_ERROR.UNIQUE_VIOLATION,
+          constraint: "unique_transaction",
+          message: 'duplicate key value violates unique constraint "unique_transaction"',
+        };
+      }
+    }
+    return transaction;
   }
 }
