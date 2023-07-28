@@ -1,6 +1,17 @@
 import { BLOCKCHAIN_NAME_TO_ENUM, BLOCK_CONFIRMATIONS } from "./constants";
 import { BlockStatus, Blockchain } from "./enums";
 import { v4 as uuidv4 } from "uuid";
+import { ValueTransformer } from "typeorm";
+
+// From here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt/BigInt
+// other options: http://mikemcl.github.io/big.js/
+/**
+ * bigInts are stored as strings in the DB so we need to do the transformations
+ */
+export const bigIntTransformer: ValueTransformer = {
+  to: (entityValue: bigint): bigint => entityValue,
+  from: (databaseValue: string): number | undefined => (databaseValue ? Number(databaseValue) : undefined),
+};
 
 // used to filter out null and undefined values: https://stackoverflow.com/questions/43118692/typescript-filter-out-nulls-from-an-array
 export const notEmpty = <T>(value: T): value is NonNullable<typeof value> => !!value;
