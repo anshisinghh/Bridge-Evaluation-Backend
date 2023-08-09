@@ -1,12 +1,5 @@
 # Backend Blockchain Insights
 
-## Table of Contents
-1. [Overview](#Overview)
-1. [Product Spec](#Product-Spec)
-1. [Wireframes](#Wireframes)
-2. [Schema](#Schema)
-
-
 ## Overview
 ### Description
 * Analyzed the performance of blockchain interoperability protocols for a web3 company, Orb Labs, in partnership with Open Avenues, focusing on backend engineering fundamentals.
