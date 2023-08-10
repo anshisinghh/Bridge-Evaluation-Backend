@@ -12,6 +12,7 @@ export class EventListener {
 
   constructor(blockchain: Blockchain, providerUrl: string, contractAddress: string, destinationAddress: string) {
     this.blockchainReader = new BlockchainReader(providerUrl);
+    this.blockchain = blockchain;
     this.transferEventsProcessor = new TransferEventsProcessor(
       blockchain,
       this.blockchainReader,
@@ -28,7 +29,11 @@ export class EventListener {
     console.log(`Starting to listen for blocks for ${this.blockchain} chain`);
     this.ensureLastIndexedBlocks();
     const blockConfirmations = BLOCK_CONFIRMATIONS[this.blockchain];
+   console.log(blockConfirmations);
+   console.log(this.blockchain);
+
     this.blockchainReader.listenToBlockHeaders(async (blockNumber: number) => {
+      await this.fetchAndProcessEvents(blockNumber);
       if (blockNumber % blockConfirmations === 0) {
         await this.fetchAndProcessEvents(blockNumber);
       } else if (blockConfirmations === undefined) {

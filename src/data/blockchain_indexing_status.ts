@@ -6,7 +6,7 @@ import { AppDataSource } from "../data_source";
 /**
  * Keep track of what blocks have been indexed on what chains
  **/
-@Entity({ name: "blockchain_indexing_status", schema: "dex" })
+@Entity({ name: "blockchain_indexing_status" })
 @Index("unique_blockchain_indexing_status", ["blockchain", "type"], { unique: true })
 export class BlockchainIndexingStatus {
   @PrimaryColumn({ name: "id", type: "text", update: false })
@@ -75,7 +75,7 @@ export class BlockchainIndexingStatus {
     blockNumber: number,
     updateBackwards?: boolean
   ): Promise<BlockchainIndexingStatus> {
-    return await AppDataSource.transaction((transactionalEntityManager) =>
+    return await (await AppDataSource).transaction((transactionalEntityManager) =>
       transactionalEntityManager
         .createQueryBuilder(BlockchainIndexingStatus, "blockchainIndexingStatus")
         .setLock("pessimistic_write")
