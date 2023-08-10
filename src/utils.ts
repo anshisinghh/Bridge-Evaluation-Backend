@@ -21,9 +21,18 @@ export const getBlockStatus = (blockNumber: number, latestBlock: number, blockch
 };
 
 export const getChain = (chainName: string): Blockchain => {
-  const blockchain = BLOCKCHAIN_NAME_TO_ENUM[chainName.trim().toUpperCase()];
-  if (blockchain) return blockchain;
-  throw new Error(`invalid id: ${chainName}`);
+  if (!chainName) {
+    throw new Error("Chain name is missing.");
+  }
+
+  const trimmedChainName = chainName.trim().toUpperCase();
+  const blockchain = BLOCKCHAIN_NAME_TO_ENUM[trimmedChainName];
+  
+  if (blockchain !== undefined) {
+    return blockchain;
+  } else {
+    throw new Error(`Invalid chain name: ${trimmedChainName}`);
+  }
 };
 
 export const uuid = (removeDashes = false): string => {
