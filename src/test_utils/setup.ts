@@ -1,5 +1,4 @@
 import { AppDataSource } from "../data_source";
-
 /*
   This file is run right after the env variables have been set
   
@@ -14,13 +13,10 @@ export default async () => {
   await AppDataSource.query(`DROP DATABASE IF EXISTS ${databaseName}`);
   await AppDataSource.query(`CREATE DATABASE ${databaseName}`);
 
-//   const workers = parseInt(process.env["JEST_WORKERS"] || "1");
-  const workers = 1;
-  console.log(`Number of workers: ${workers}`); // Debug logging
+  const workers = parseInt(process.env["JEST_WORKERS"] || "1");
 
   for (let i = 1; i <= workers; i++) {
     const workerDatabaseName = `test_${i}`;
-    console.log(`Worker database name: ${workerDatabaseName}`); // Debug logging
 
     await AppDataSource.query(`DROP DATABASE IF EXISTS ${workerDatabaseName};`);
     await AppDataSource.query(`CREATE DATABASE ${workerDatabaseName} TEMPLATE ${databaseName};`);
