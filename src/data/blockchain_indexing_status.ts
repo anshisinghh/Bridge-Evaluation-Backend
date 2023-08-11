@@ -2,6 +2,7 @@ import { Column, Entity, Index, BeforeInsert, BeforeUpdate, PrimaryColumn } from
 import { Blockchain, BlockchainIndexType } from "../enums";
 import { bigIntTransformer, uuidWithPrefix } from "../utils";
 import { AppDataSource } from "../data_source";
+import { getManager } from "typeorm";
 
 /**
  * Keep track of what blocks have been indexed on what chains
@@ -64,6 +65,10 @@ export class BlockchainIndexingStatus {
   // @ts-ignore
   private beforeUpdate() {
     this.validateInitialStatesValue();
+  }
+
+  static async clearDatabase(){
+    await AppDataSource.getRepository(BlockchainIndexingStatus).delete({});
   }
 
   /**

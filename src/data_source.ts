@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const { JEST_WORKER_ID, NODE_ENV } = process.env;
-const db_name = NODE_ENV === "test" ? `test_${JEST_WORKER_ID}` : "postgres";
+const db_name = "postgres"; //NODE_ENV == "test" ? `test_${JEST_WORKER_ID}` : "postgres";
 
 export const AppDataSource = new DataSource({
   type: "postgres",

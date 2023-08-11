@@ -2,6 +2,10 @@ import { BlockchainIndexingStatus } from "../../data/blockchain_indexing_status"
 import { Blockchain, BlockchainIndexType } from "../../enums";
 
 describe("BlockchainIndexingStatus", () => {
+    afterEach(async () => {
+        await BlockchainIndexingStatus.clearDatabase();
+      });
+    
     describe("create", () => {
       test("creates entry", async () => {
         const indexingStatus = await BlockchainIndexingStatus.upsert(
