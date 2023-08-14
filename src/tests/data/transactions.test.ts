@@ -1,10 +1,11 @@
 import { BlockchainIndexingStatus } from "../../data/blockchain_indexing_status";
+import { AppDataSource } from "../../data_source";
 import { Blockchain, BlockchainIndexType } from "../../enums";
 
 describe("BlockchainIndexingStatus", () => {
     afterEach(async () => {
-        await BlockchainIndexingStatus.clearDatabase();
-      });
+      await AppDataSource.query(`DELETE FROM blockchain_indexing_status`);      
+    });
     
     describe("create", () => {
       test("creates entry", async () => {
