@@ -67,10 +67,6 @@ export class BlockchainIndexingStatus {
     this.validateInitialStatesValue();
   }
 
-  static async clearDatabase(){
-    await AppDataSource.getRepository(BlockchainIndexingStatus).delete({});
-  }
-
   /**
    * If an index status exists, lock it and then update. Otherwise create a new status.
    */
