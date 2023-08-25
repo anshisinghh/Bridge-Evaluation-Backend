@@ -11,3 +11,6 @@
 
 
 ## Current Progress
+<img width="745" alt="Screenshot 2023-08-24 at 10 18 05 PM" src="https://github.com/anshisinghh/bridge-evaluation-backend/assets/91299468/6ab78187-ee0a-48de-b1f0-c9ab8df9dcb1">
+
+<img width="945" alt="Screenshot 2023-08-24 at 10 18 38 PM" src="https://github.com/anshisinghh/bridge-evaluation-backend/assets/91299468/ee39f708-0c0f-4189-8e80-c4d28eab382f">
