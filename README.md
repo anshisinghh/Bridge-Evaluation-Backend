@@ -1,7 +1,7 @@
 # Backend Blockchain Bridge Evaluation
 
 ## Description
-* Analyzed the performance of blockchain interoperability protocols for a web3 company, Orb Labs, in partnership with Open Avenues. This project focused on designing and implementing a robust backend system for tracking and evaluating transactions on EVM-based blockchains, starting with Ethereum.
+* Analyzed the performance of blockchain interoperability protocols for a web3 company, Orb Labs. This project focused on designing and implementing a robust backend system for tracking and evaluating transactions on EVM-based blockchains, starting with Ethereum.
 * Utilized TypeScript and web3 libraries to interface with Ethereum blockchain, implementing best practices for code structure and organization. 
 * Gained hands-on experience with relational databases, particularly PostgreSQL, for storing and managing data that needs to be persisted. Utilized TypeORM and migrations to ensure proper version control and schema management, demonstrating expertise in database interactions.
 * Leveraged external APIs, including Alchemy, for querying data from various blockchain networks. 
